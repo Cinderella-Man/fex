@@ -13,20 +13,14 @@ defmodule Fex do
   check was operation successfull:
 
   ```
-    case File.read("list.json") do
-      {:ok, json} ->
-        case Jason.decode(json) do
-              {:ok, data} ->
-                data
-                |> Enum.sum()
+    with {:ok, json} <- File.read("list.json"),
+         {:ok, data} <- Jason.decode(json)
+    do
 
-              {:error, msg} ->
-                Logger.error("Error occurred")
-                IO.inspect(msg)
-                0
-            end
+      data
+      |> Enum.sum()
 
-      {:error, msg} ->
+    else
         Logger.error("Error occurred")
         IO.inspect(msg)
         0
